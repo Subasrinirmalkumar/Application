@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>File Application Management</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <nav>
+        <ul class="navbar">
+            <li><a href="#home" id="home-link">Home</a></li>
+            <li><a href="#upload" id="upload-link">Upload</a></li>
+            <li><a href="#view" id="view-link">View</a></li>
+        </ul>
+    </nav>
+
+    <div class="content">
+        <div id="home-section">
+            <h1>Welcome to the File Management System</h1>
+            <p>Select an option from the navigation bar.</p>
+        </div>
+
+        <div id="upload-section" class="hidden">
+            <h2>Upload File</h2>
+            <input type="file" id="file-input" />
+            <button id="upload-btn">Upload</button>
+            <div>
+                <input type="text" id="search" placeholder="Search uploaded files..." />
+                <button id="search-btn">Search</button>
+            </div>
+            <h3>Uploaded Files:</h3>
+            <ul id="file-list"></ul>
+        </div>
+
+        <div id="view-section" class="hidden">
+            <h2>View Files</h2>
+            <table id="file-table">
+                <thead>
+                    <tr>
+                        <th>File Name</th>
+                        <th>File Size</th>
+                        <th>File Format</th>
+                        <th>Download</th>
+                        <th>Delete</th>
+                    </tr>
+                </thead>
+                <tbody id="file-table-body"></tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        const uploadSection = document.getElementById('upload-section');
+        const viewSection = document.getElementById('view-section');
+        const uploadBtn = document.getElementById('upload-btn');
+        const fileInput = document.getElementById('file-input');
+        const searchInput = document.getElementById('search');
+        const fileTableBody = document.getElementById('file-table-body');
+        const files = [];
+
+        // Show section based on navigation click
+        function showSection(section) {
+            uploadSection.classList.add('hidden');
+            viewSection.classList.add('hidden');
+            document.getElementById('home-section').classList.add('hidden');
+
+            if (section === 'upload') {
+                uploadSection.classList.remove('hidden');
+            } else if (section === 'view') {
+                viewSection.classList.remove('hidden');
+                populateFileTable();
+            } else {
+                document.getElementById('home-section').classList.remove('hidden');
+            }
+        }
+
+        document.getElementById('home-link').addEventListener('click', () => showSection('home'));
+        document.getElementById('upload-link').addEventListener('click', () => showSection('upload'));
+        document.getElementById('view-link').addEventListener('click', () => showSection('view'));
+
+        // Handle file upload
+        uploadBtn.addEventListener('click', function() {
+            const file = fileInput.files[0]; // Get the first selected file
+            if (file) {
+                const fileName = file.name; // Get the file name
+                const fileSize = (file.size / 1024).toFixed(2) + ' KB'; // Get the file size in KB
+                const fileFormat = fileName.split('.').pop(); // Get the file format
+                
+                // Store file data
+                files.push({ name: fileName, size: fileSize, format: fileFormat });
+                fileInput.value = ''; // Clear input
+                alert(`${fileName} uploaded successfully!`);
+                populateFileTable(); // Update view table
+            } else {
+                alert("Please select a file to upload.");
+            }
+        });
+
+        // Populate file table with uploaded files
+        function populateFileTable() {
+            fileTableBody.innerHTML = ''; // Clear previous entries
+            files.forEach((file, index) => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${file.name}</td>
+                    <td>${file.size}</td>
+                    <td>${file.format}</td>
+                    <td><button onclick="downloadFile(${index})">Download</button></td>
+                    <td><button onclick="deleteFile(${index})">Delete</button></td>
+                `;
+                fileTableBody.appendChild(row);
+            });
+        }
+
+        // Download file (simulated)
+        function downloadFile(index) {
+            alert(`Downloading ${files[index].name}`);
+            // Implement actual download logic here
+        }
+
+        // Delete file
+        function deleteFile(index) {
+            files.splice(index, 1); // Remove file from array
+            populateFileTable(); // Update the table display
+            alert(`Deleted ${files[index].name}`);
+        }
+
+        // Simple search function
+        document.getElementById('search-btn').addEventListener('click', function() {
+            const searchTerm = searchInput.value.toLowerCase();
+            const items = document.querySelectorAll('#file-list li');
+            items.forEach(item => {
+                item.style.display = item.textContent.toLowerCase().includes(searchTerm) ? '' : 'none';
+            });
+        });
+
+        // Show home section initially
+        showSection('home');
+    </script>
+</body>
+</html>
+
+
