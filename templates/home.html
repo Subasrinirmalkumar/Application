@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>File Management System</title>
+    <style>
+        nav {
+            background-color: #3b8b3a; /* Green background for the navbar */
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3); /* Stronger shadow for depth */
+            padding: 10px 0; /* Padding to give height to the navbar */
+            position: relative; /* Positioning context */
+            z-index: 10; /* Ensure navbar is above other elements */
+            margin-bottom: 20px; /* Space below the navbar */
+            margin-left: 50px;
+            margin-right: 50px;
+            margin-top: 5px;
+        }
+        
+        .content {
+            display: flex;
+            justify-content: center; /* Center horizontally */
+            align-items: center; /* Center vertically if needed */
+            min-height: 80vh; /* Full viewport height */
+        }
+
+        .script {
+            display: relative;
+            justify-content : center; /* Center horizontally */
+            align-items: center; /* Center vertically if needed */
+            min-height: 80vh; /* Full viewport height */
+        }
+
+        .card {
+            width: 400px; /* Adjust width as needed */
+            padding: 20px;
+            margin: 20px; /* Add margin if desired */
+            background-color: #f9f9f9; /* Card background color */
+            border: 1px solid #ddd; /* Card border */
+            border-radius: 8px; /* Rounded corners */
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Shadow for depth */
+            text-align: center; /* Center text inside the card */
+        }
+        
+        .card h1 {
+            font-size: 24px; /* Title font size */
+            margin: 0; /* Remove default margin */
+        }
+        
+        .card p {
+            font-size: 16px; /* Paragraph font size */
+            margin-top: 10px; /* Space above the paragraph */
+        }
+        
+        .navbar {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            justify-content: space-around; /* Space out items evenly */
+        }
+        
+        .navbar li {
+            flex: 1;
+        }
+        
+        .navbar a {
+            display: block;
+            text-align: center;
+            padding: 14px 20px;
+            color: #ffffff; /* White text color for contrast */
+            border-radius: 4px; /* Rounded corners for links */text-decoration: none;
+            transition: background-color 0.3s, transform 0.3s; /* Smooth transitions */
+        }
+        
+        .navbar a:hover {
+            background-color: #5cb85c; /* Active link color */
+        }
+        
+        .content {
+            padding: 10px;
+        }
+        
+        .hidden {
+            display: none;
+        }
+
+        #upload-section{
+            margin-top: 20px;
+            border-radius: 8px; /* Rounded corners */
+            background-color: #e3f2fd; /* Light blue background for view section */
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Shadow for depth */
+            padding: 20px; /* Padding for content */
+            width: 100vw; /* Full viewport width */
+            height: calc(40vh - 20px); /* Full viewport height minus margin */
+            box-sizing: border-box; /* Include padding in width and height */
+
+        
+        }
+        
+        #upload-section {
+            position: relative;
+        }
+        
+        #upload-section h2 {
+            margin-bottom: 10px;
+        }
+        
+        #file-input {
+            display: inline-block;
+            width: 1600px;
+        }
+        
+        #upload-btn {
+            position: absolute;
+            right: 1;
+            top: 1;
+            margin-left: 30px; /* Optional: Add space between the input and button */
+            margin-top: 13px;
+        }
+        
+        
+        #file-list {
+            margin-top: 20px
+        }
+        
+        
+        #view-section {
+            margin-top: 20px; /* Added margin */
+            border-radius: 8px; /* Rounded corners */
+            background-color: #e3f2fd; /* Light blue background for view section */
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Shadow for depth */
+            padding: 20px; /* Padding for content */
+            width: 100vw; /* Full viewport width */
+            height: calc(90vh - 20px); /* Full viewport height minus margin */
+            box-sizing: border-box; /* Include padding in width and height */
+            
+        }
+        
+        input[type="file"],
+        input[type="text"] {
+            margin: 10px 0;
+            padding: 10px; /* Added padding for inputs */
+            border: 1px solid #ccc; /* Subtle border */
+            border-radius: 4px; /* Rounded corners for inputs */
+            width: calc(100% - 22px); /* Full width minus padding */
+        }
+        
+        button {
+            padding: 10px 15px; /* Increased padding */
+            border: none;
+            border-radius: 4px; /* Rounded corners */
+            background-color: #003366; /* Button color */
+            color: white;
+            cursor: pointer;
+            transition: background-color 0.3s; /* Smooth transition */
+        }
+        
+        button:hover {
+            background-color: #00509e; /* Lighter button color on hover */
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px; /* Space above table */
+        }
+        
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        
+        th {
+            background-color: #f9f9f9; /* Slightly darker header */
+            font-weight: bold; /* Bold text for headers */
+        }
+    </style>   
+</head>
+<body>
+
+    <nav>
+        <ul class="navbar">
+            <li><a href="#home" id="home-link">Home</a></li>
+            <li><a href="#upload" id="upload-link">Upload</a></li>
+            <li><a href="#view" id="view-link">View</a></li>
+        </ul>
+    </nav>
+    <div class="content">
+        <div id="home-section" class="card">
+            <h2>Welcome to the File Management System</h2>
+            <p>Select an option from the navigation bar.</p>
+        </div>
+        <div id="upload-section" class="hidden">
+            <h3>Upload File</h3>
+            <input type="file" id="file-input" />
+            <button id="upload-btn">Upload</button>
+            <ul id="file-list"></ul>
+        </div>
+        <div id="view-section" class="hidden">
+            <h3>View Files</h3>
+            <p id="view">Uploaded files will be listed below:</p> 
+            <table id="file-table">
+                <thead>
+                    <tr>
+                        <th>File Name</th>
+                        <th>File Size</th>
+                        <th>File Format</th>
+                        <th>Download</th>
+                        <th>Delete</th>
+                    </tr>
+                </thead>
+                <tbody id="file-table-body"></tbody>
+            </table>
+        </div>
+    </div>    
+
+    <script>
+        const uploadSection = document.getElementById('upload-section');
+        const viewSection = document.getElementById('view-section');
+        const homeSection = document.getElementById('home-section');
+        const uploadBtn = document.getElementById('upload-btn');
+        const fileInput = document.getElementById('file-input');
+        const fileTableBody = document.getElementById('file-table-body');
+
+
+        // Show section based on navigation click
+        function showSection(section) {
+            uploadSection.classList.add('hidden');
+            viewSection.classList.add('hidden');
+            homeSection.classList.add('hidden');
+
+            if (section === 'upload') {
+                uploadSection.classList.remove('hidden');
+            } else if (section === 'view') {
+                viewSection.classList.remove('hidden');
+                fetchUploadedFiles(); // Fetch and display uploaded files when viewing
+            } else {
+                homeSection.classList.remove('hidden');
+            }
+        }
+
+        // Event listeners for navigation
+        document.getElementById('home-link').addEventListener('click', () => showSection('home'));
+        document.getElementById('upload-link').addEventListener('click', () => showSection('upload'));
+        document.getElementById('view-link').addEventListener('click', () => showSection('view'));
+
+        // Handle file upload
+        uploadBtn.addEventListener('click', async () => {
+            const file = fileInput.files[0];
+            if (file) {
+                const formData = new FormData();
+                formData.append("file", file);                
+                
+                try {
+                    const response = await fetch("/uploadfile/", {
+                        method: "POST",
+                        body: formData
+                    });
+                    
+                    if (response.ok) {
+                        alert(`${file.name} uploaded successfully!`);
+                        fileInput.value = '';
+                        fetchUploadedFiles(); // Refresh the view section after upload 
+                    } else {
+                        alert("Upload failed. Please try again.");
+                    }
+                } catch (error) {
+                    console.error("Error uploading file:", error);
+                    alert("An error occurred during the upload.");
+                }
+            } else {
+                alert("Please select a file to upload.");
+            }
+        });
+
+        // Fetch uploaded files from the server
+        async function fetchUploadedFiles() {
+            try {
+                const response = await fetch("/uploads/");
+                if (response.ok) {
+                    const data = await response.json();
+                    populateFileTable(data.uploaded_files); // Populate with fetched files     
+                } else {
+                    alert("Failed to fetch files.");
+                }
+            } catch (error) {
+                console.error("Error fetching files:", error);
+                alert("An error occurred while fetching files.");
+            }
+        }
+
+
+
+        // Populate file table with uploaded files
+        function populateFileTable(files) {
+            fileTableBody.innerHTML = '';
+            files.forEach((file ,index) => { // Correctly use parentheses and arrow function syntax
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${file.file_name}</td>
+                    <td>${file.file_size}</td>
+                    <td>${file.file_format}</td>
+                    <td><button onclick="downloadFile(${index})">Download</button></td>
+                    <td><button onclick="deleteFile(${index})">Delete</button></td>
+                `;
+                fileTableBody.appendChild(row);
+            });
+        }
+
+        // Download file
+        async function downloadFile(index) {
+            const row = fileTableBody.children[index];
+            const filename = row.cells[0].textContent; // Get filename from the first cell
+
+            const response = await fetch(`/files/${filename}`);
+
+            if (response.ok) {
+                const blob = await response.blob();
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.style.display = 'none';
+                a.href = url;
+                a.download = filename;
+                document.body.appendChild(a);
+                a.click();
+                window.URL.revokeObjectURL(url);
+                alert(`Downloading ${filename}`);
+            } else {
+                alert('File not found or could not be downloaded.');
+            }
+        }
+
+        // Delete file
+        async function deleteFile(index) {
+            const row = fileTableBody.children[index];
+            const filename = row.cells[0].textContent; // Get the filename from the first cell
+
+            const response = await fetch(`/files/${filename}`, {
+                method: 'DELETE',
+            });
+
+            if (response.ok) {
+                alert(`Deleted ${filename} successfully.`);
+                fetchUploadedFiles(); // Refresh the file list
+            } else {
+                alert('Failed to delete the file.');
+            }
+        }
+
+
+
+        // Show home section initially
+        showSection('home');
+    </script> 
+</body>
+
+</html>

@@ -1,0 +1,67 @@
+SUBASRI NIRMALKUMAR
+Entry level developer
+
+subasrin3303@gmail.com
+6384765267
+https://github.com/Subasrinirmalkumar
+
+Summary
+======
+Detail-oriented entry-level developer with a degree in Computer Science and a solid foundation in Python, SQL, HTML, and Excel. Passionate about creating user-friendly and efficient web applications. Eager to leverage skills in a collaborative environment and contribute to innovative projects.”
+
+
+Education
+======
+Bachelor's Degree in Computer Science
+APOLLO ARTS AND SCIENCE COLLEGE
+2020 - 2023
+Madhavaram,chennai
+
+HSC
+Government girls higher secondary school
+2018 - 2019
+Keeramangalam
+
+
+Languages
+======
+English
+
+Tamil
+
+
+Projects
+======
+STUDENT ATTENDANCE MANAGEMENT SYSTEM
+2023undefined
+Chennai
+The Student Attendance Management System effectively simplifies the process of tracking student attendance, ensuring accurate record-keeping and easy access to data. This project showcases proficiency in Python programming, database management, and the ability to create practical software solutions.
+
+
+Strengths
+======
+Teamwork
+During my time in college, I actively participated in various team projects that enhanced my collaboration. I worked alongside classmates to student attendance management system.
+
+Problem Solving
+Adapting and finding effective solutions to unexpected situations and challenges.
+
+
+Skills
+======
+ - Python
+ - SQL
+ - HTML/CSS
+ - Excel
+ - Git and Github
+ - MongoDB
+
+
+CERTIFICATION
+======
+Python full stack
+Attended a 4 days bootcamp on python full stack with certified.
+
+Python OOP
+Udemy certified python oop
+
