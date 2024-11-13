@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login and Register</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .form-container {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            width: 300px;
+        }
+        h2 {
+            text-align: center;
+        }
+        label {
+            font-weight: bold;
+            margin-top: 10px;
+        }
+        input {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .switch-form {
+            text-align: center;
+            margin-top: 15px;
+        }
+
+
+    </style>
+</head>
+<body>
+    <div class="form-container" id="form-container">
+        <!-- Login Form -->
+        <form id="login-form" style="display: block;">
+            <h2>Login</h2>
+            <label for="login-username">Username:</label>
+            <input type="text" id="login-username" name="username" required>
+            <label for="login-password">Password:</label>
+            <input type="password" id="login-password" name="password" required>
+            <button type="submit">Login</button>
+            <div class="switch-form">
+                Don't have an account? <a href="#" id="show-register-form">Register here</a>
+            </div>
+        </form>
+        
+
+        <!-- Register Form -->
+        <form id="register-form" style="display: none;">
+            <h2>Register</h2>
+            <label for="register-username">Username:</label>
+            <input type="text" id="register-username" name="username" required>
+            <label for="register-password">Password:</label>
+            <input type="password" id="register-password" name="password" required>
+            <label for="register-name">Name:</label>
+            <input type="text" id="register-name" name="name" required>
+            <label for="register-dob">Date of Birth:</label>
+            <input type="date" id="register-dob" name="dob" required>
+            <button type="submit">Register</button>
+            <div class="switch-form">
+                Already have an account? <a href="#" id="show-login-form">Login here</a>
+            </div>
+        </form>
+        
+    </div>
+
+
+
+    <script>
+        document.getElementById("show-register-form").addEventListener("click", function(event) {
+            event.preventDefault();
+            document.getElementById("login-form").style.display = "none";
+            document.getElementById("register-form").style.display = "block";
+        });
+
+        document.getElementById("show-login-form").addEventListener("click", function(event) {
+            event.preventDefault();
+            document.getElementById("register-form").style.display = "none";
+            document.getElementById("login-form").style.display = "block";
+        });
+
+    
+    
+        // Handle login form submission
+        document.getElementById("login-form").addEventListener("submit", async function(event) {
+            event.preventDefault();
+
+            const username = document.getElementById("login-username").value;
+            const password = document.getElementById("login-password").value;
+            console.log(username,password)
+            // Check if required fields are filled
+            if (!username || !password) {
+                alert("Please fill in all required fields.");
+                return;
+            }
+            
+            const response = await fetch('/login/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    'username': username,
+                    'password': password
+                })
+                
+        });
+
+            const data = await response.json();
+
+
+            if (response.ok) {
+                alert(data.message + " User ID: " + data.user_id);
+                window.location.href = '/';  // Redirect to the home page
+            } else {
+                alert('no repsonse ');
+            }
+        });
+
+        // Handle register form submission
+        document.getElementById("register-form").addEventListener("submit", async function(event) {
+            event.preventDefault();
+
+            const username = document.getElementById("register-username").value;
+            const password = document.getElementById("register-password").value;
+            const name = document.getElementById("register-name").value;
+            const dob = document.getElementById("register-dob").value;
+
+            // Check if required fields are filled
+            if (!username || !password || !name || !dob) {
+                alert("Please fill in all required fields.");
+                return;
+            }
+
+            try{
+                const response = await fetch('/register/', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({  // Send form data as a JSON string
+                        username: username,
+                        password: password,
+                        name: name,
+                        dob: dob
+                    })    
+                });
+
+                const data = await response.json()
+
+
+                if (response.ok) {
+                    alert("Registration successful! User ID: "  + data.user_id);
+                    window.location.href = '/'; // Redirect to the home page
+                } else {
+                    alert(data.detail);
+                }
+            } catch (error) {
+                console.error('Error during registration:', error);
+                alert("An error occurred. Please try again.");
+            }       
+        });
+
+
+    </script>
+
+</body>
+</html>
