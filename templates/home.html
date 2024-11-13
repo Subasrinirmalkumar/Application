@@ -92,10 +92,10 @@
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Shadow for depth */
             padding: 20px; /* Padding for content */
             width: 100vw; /* Full viewport width */
-            height: calc(40vh - 20px); /* Full viewport height minus margin */
+            height: calc(20vh - 20px); /* Full viewport height minus margin */
             box-sizing: border-box; /* Include padding in width and height */
 
-        
+
         }
         
         #upload-section {
@@ -159,6 +159,31 @@
         button:hover {
             background-color: #00509e; /* Lighter button color on hover */
         }
+
+        .logout-btn {
+            background-color: #ff4d4d;  /* Red color for logout */
+            color: white;               /* Text color */
+            font-size: 16px;            /* Font size */
+            padding: 10px 20px;         /* Padding around the text */
+            border: none;               /* Remove default border */
+            border-radius: 5px;         /* Rounded corners */
+            cursor: pointer;           /* Pointer cursor on hover */
+            transition: background-color 0.3s ease, transform 0.3s ease; /* Smooth hover effect */
+        }
+          
+        .logout-btn:hover {
+            background-color: #e60000;  /* Darker red on hover */
+            transform: scale(1.05);      /* Slightly increase size on hover */
+        }
+          
+        .logout-btn:focus {
+            outline: none;              /* Remove outline on focus */
+        }
+          
+        .logout-btn:active {
+            transform: scale(0.98);      /* Slight shrink effect when clicked */
+        }
+          
         
         table {
             width: 100%;
@@ -179,101 +204,121 @@
     </style>   
 </head>
 <body>
-
     <nav>
         <ul class="navbar">
             <li><a href="#home" id="home-link">Home</a></li>
             <li><a href="#upload" id="upload-link">Upload</a></li>
             <li><a href="#view" id="view-link">View</a></li>
+            <li><a href="#logout" id="logout-link" style="display: none;">Logout</a></li> 
         </ul>
     </nav>
     <div class="content">
         <div id="home-section" class="card">
-            <h2>Welcome to the File Management System</h2>
+            <h2>Welcome to the file Management System</h2>
             <p>Select an option from the navigation bar.</p>
-        </div>
-        <div id="upload-section" class="hidden">
-            <h3>Upload File</h3>
-            <input type="file" id="file-input" />
-            <button id="upload-btn">Upload</button>
-            <ul id="file-list"></ul>
-        </div>
-        <div id="view-section" class="hidden">
-            <h3>View Files</h3>
-            <p id="view">Uploaded files will be listed below:</p> 
-            <table id="file-table">
-                <thead>
-                    <tr>
-                        <th>File Name</th>
-                        <th>File Size</th>
-                        <th>File Format</th>
-                        <th>Download</th>
-                        <th>Delete</th>
-                    </tr>
-                </thead>
-                <tbody id="file-table-body"></tbody>
-            </table>
-        </div>
-    </div>    
+            </div>
+            <div class="script">    
+                <div id="upload-section" class="hidden">
+                    <h3>Upload File</h3>
+                    <input type="file" id="file-input" />
+                    <button id="upload-btn">Upload</button>
+                    <ul id="file-list"></ul>
+                </div>
+                <div id="view-section" class="hidden">
+                    <h3>View Files</h3>
+                    <p id="view">Uploaded files will be listed below:</p> 
+                    <table id="file-table">
+                        <thead>
+                            <tr>
+                                <th>File Name</th>
+                                <th>File Size</th>
+                                <th>File Format</th>
+                                <th>Download</th>
+                                <th>Delete</th>
+                            </tr>
+                        </thead>
+                        <tbody id="file-table-body"></tbody>
+                    </table>
+                </div>
+                <div id="logout-section" class="hidden">
+                    <button id="logout-button" style="display: none;">Logout</button>
+                </div>
+            </div> 
+        </div>        
 
     <script>
         const uploadSection = document.getElementById('upload-section');
         const viewSection = document.getElementById('view-section');
         const homeSection = document.getElementById('home-section');
+        const logoutSection = document.getElementById('logout-section');
         const uploadBtn = document.getElementById('upload-btn');
         const fileInput = document.getElementById('file-input');
         const fileTableBody = document.getElementById('file-table-body');
+        const logoutLink = document.getElementById('logout-link');
+        const logoutButton = document.getElementById('logout-button');
 
-
-        // Show section based on navigation click
+        // Modify the showSection function
         function showSection(section) {
             uploadSection.classList.add('hidden');
             viewSection.classList.add('hidden');
             homeSection.classList.add('hidden');
+            logoutSection.classList.add('hidden');
 
-            if (section === 'upload') {
-                uploadSection.classList.remove('hidden');
-            } else if (section === 'view') {
-                viewSection.classList.remove('hidden');
-                fetchUploadedFiles(); // Fetch and display uploaded files when viewing
-            } else {
+            if (section === 'home') {
+                console.log(section)
                 homeSection.classList.remove('hidden');
+            } else if (section === 'upload') {
+                console.log(section)
+                uploadSection.classList.remove('hidden');   
+            } else if (section === 'view') {
+                console.log(section)
+                viewSection.classList.remove('hidden');
+                fetchUploadedFiles();
+            } else if (section === 'logout') {
+                logoutSection.classList.remove('hidden');
+     
             }
-        }
+        }         
 
         // Event listeners for navigation
-        document.getElementById('home-link').addEventListener('click', () => showSection('home'));
-        document.getElementById('upload-link').addEventListener('click', () => showSection('upload'));
-        document.getElementById('view-link').addEventListener('click', () => showSection('view'));
+        document.getElementById('home-link').addEventListener('click', (e) => {e.preventDefault(); showSection('home')});
+        document.getElementById('upload-link').addEventListener('click', (e) => {e.preventDefault(); showSection('upload')});
+        document.getElementById('view-link').addEventListener('click', (e) => {e.preventDefault(); showSection('view')});
+        document.getElementById('logout-link').addEventListener('click', (e) => {e.preventDefault(); showSection('logout')});
+
 
         // Handle file upload
         uploadBtn.addEventListener('click', async () => {
-            const file = fileInput.files[0];
-            if (file) {
-                const formData = new FormData();
-                formData.append("file", file);                
-                
-                try {
-                    const response = await fetch("/uploadfile/", {
-                        method: "POST",
-                        body: formData
-                    });
+            const file = fileInput.files[0]; // Get the selected file
+
+            if (!file) {
+                alert("Please select a file to upload.");
+                return;
+            }
+
+            const formData = new FormData();
+            formData.append("file", file);
+            
+            try {
+                const response = await fetch("/uploadfile/", {
+                    method: "POST",
+                    body: formData
+                });
                     
-                    if (response.ok) {
-                        alert(`${file.name} uploaded successfully!`);
-                        fileInput.value = '';
-                        fetchUploadedFiles(); // Refresh the view section after upload 
-                    } else {
-                        alert("Upload failed. Please try again.");
-                    }
-                } catch (error) {
+                if (response.ok) {
+                    alert(`${file.name} uploaded successfully!`);
+                    fileInput.value = '';
+                    fetchUploadedFiles(); // Refresh the view section after upload 
+                } else {
+                    const errorMessage = await response.text();
+                    alert(errorMessage); // Display error message returned from the server
+                }
+            } catch (error) {
                     console.error("Error uploading file:", error);
                     alert("An error occurred during the upload.");
-                }
-            } else {
-                alert("Please select a file to upload.");
-            }
+            } 
         });
+
 
         // Fetch uploaded files from the server
         async function fetchUploadedFiles() {
@@ -290,8 +335,6 @@
                 alert("An error occurred while fetching files.");
             }
         }
-
-
 
         // Populate file table with uploaded files
         function populateFileTable(files) {
@@ -349,10 +392,62 @@
             }
         }
 
+        if ({{ is_logged_in | tojson }}) {
+            document.getElementById('logout-button').style.display = 'block';
 
+        }
+          
+        // Check login state on page load
+        document.addEventListener("DOMContentLoaded", function() {
+            fetch('/check-login-status/')
+            .then(response => response.json())
+            .then(data => {
+                if (data.is_logged_in) {
+                    logoutLink.style.display = 'block';
+                    logoutButton.style.display = 'block';
+                    showSection('home');  // Show the home section when logged in
+                } else {
+                    logoutLink.style.display = 'none';
+                    logoutButton.style.display = 'none';
+                    window.location.href = '/login';
+                }
+            })
+            .catch(error => {
+                console.error("Error checking login status:", error);
+            });  
+        });
+
+
+        
+
+        // Handle logout
+        logoutButton.addEventListener("click", async function(event) {
+            event.preventDefault();
+            
+            try {
+                const response = await fetch('/logout/', {  // Replace with your logout endpoint
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    credentials: 'same-origin'
+                });
+                if (response.ok) {
+                    alert('You have successfully logged out!');
+                    window.location.href = '/login';  // Redirect to the login page after logout
+                    } else {
+                        alert('Logout failed. Please try again.');
+                    }
+                } catch (error) {
+                    console.error('Error during logout:', error);
+                    alert("An error occurred. Please try again.");
+                }
+            });
+   
 
         // Show home section initially
         showSection('home');
+
     </script> 
 </body>
 
